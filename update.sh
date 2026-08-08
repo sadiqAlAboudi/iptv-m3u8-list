@@ -1,38 +1,56 @@
 #!/usr/bin/env bash
 set -e
 
-# Fetch master playlist from iptv-org
-SOURCE_URL="https://iptv-org.github.io/iptv/index.m3u"
 OUTPUT_FILE="playlist.m3u"
-TMP_SOURCE="master_temp.m3u"
+TMP_STREAMS="streams.json"
+TMP_CHANNELS="channels.json"
+TMP_LOGOS="logos.json"
 
-# Define target TVG IDs or Channel Names separated by |
-# Matching by tvg-id ensures exact matching without accidental duplicates
-TARGETS="tvg-id=\"AlRasheedTV.iq|tvg-id=\"AlSharqiya.iq|tvg-id=\"AlSharqiyaNews.iq|tvg-id=\"DijlahTV.iq|tvg-id=\"MBC1.ae|tvg-id=\"MBC1Egypt.eg|tvg-id=\"MBC4.ae|tvg-id=\"MBCIraq.iq|tvg-id=\"MBCMasr2.eg|tvg-id=\"MBCMasr.eg"
+echo "Fetching API datasets..."
+curl -sL "https://iptv-org.github.io/api/streams.json" -o "$TMP_STREAMS"
+curl -sL "https://iptv-org.github.io/api/channels.json" -o "$TMP_CHANNELS"
+curl -sL "https://iptv-org.github.io/api/logos.json" -o "$TMP_LOGOS"
 
-echo "Downloading iptv-org master list..."
-curl -sL -A "Mozilla/5.0" "$SOURCE_URL" -o "$TMP_SOURCE"
+TARGET_IDS='["AlRasheedTV.iq","AlSharqiya.iq","AlSharqiyaNews.iq","DijlahTV.iq","MBC1.ae","MBC1Egypt.eg","MBC4.ae","MBCIraq.iq","MBCMasr.eg","MBCMasr2.eg"]'
 
 echo "#EXTM3U" > "$OUTPUT_FILE"
 
-# Extract matched #EXTINF block and stream URL via AWK
-awk -v pattern="$TARGETS" '
-  BEGIN { IGNORECASE = 1 }
-  /^#EXTINF:/ {
-    if ($0 ~ pattern) {
-      extinf = $0
-      is_match = 1
-    } else {
-      is_match = 0
-    }
-    next
-  }
-  !/^#/ && is_match {
-    print extinf
-    print $0
-    is_match = 0
-  }
-' "$TMP_SOURCE" >> "$OUTPUT_FILE"
+# Parse quality string, logo URL, and channel category
+jq -r \
+  --argjson targets "$TARGET_IDS" \
+  --slurpfile channels "$TMP_CHANNELS" \
+  --slurpfile logos "$TMP_LOGOS" '
+  INDEX($channels[0][]; .id) as $chan_map |
+  INDEX($logos[0][]; .channel) as $logo_map |
+  [
+    .[] 
+    | select(.channel as $c | $targets | index($c)) 
+    | . as $stream
+    | $chan_map[$stream.channel] as $chan
+    | $logo_map[$stream.channel] as $logo_obj
+    
+    # 1. Read logo URL directly from logo object property .url
+    | ($logo_obj.url // $chan.logo // "") as $logo
+    
+    # 2. Dynamic quality tagging parsed from .quality string (e.g., "720p", "1080p")
+    | ($stream.quality // "") as $q
+    | (if ($q | contains("1080")) then "@FHD"
+       elif ($q | contains("720")) then "@HD"
+       else "@SD" end) as $quality_tag
+       
+    | ($stream.channel + $quality_tag) as $tvg_id
+    
+    # 3. Capitalize group category
+    | ($chan.categories[0] // "General" | .[0:1] | ascii_upcase) + ($chan.categories[0] // "General" | .[1:]) as $group
+    
+    | {
+        key: $stream.channel,
+        entry: ("#EXTINF:-1 tvg-id=\"" + $tvg_id + "\" tvg-logo=\"" + $logo + "\" group-title=\"" + $group + "\"," + ($chan.name // $stream.channel) + "\n" + $stream.url)
+      }
+  ]
+  | unique_by(.key)
+  | .[].entry
+' "$TMP_STREAMS" >> "$OUTPUT_FILE"
 
-rm -f "$TMP_SOURCE"
-echo "Updated $OUTPUT_FILE with your custom channel list."
+rm -f "$TMP_STREAMS" "$TMP_CHANNELS" "$TMP_LOGOS"
+echo "Updated $OUTPUT_FILE with dynamic quality tags."
