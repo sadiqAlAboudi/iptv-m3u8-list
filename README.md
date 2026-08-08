@@ -49,3 +49,12 @@ Once you push your updated update.sh to GitHub:
 
 - GitHub Actions automatically executes the update script.
 - playlist.m3u regenerates with updated stream URLs, logos, and quality tags within seconds.
+
+---
+
+## Legal & DMCA Disclaimer
+
+* **No Media Hosted:** This repository does not host, store, stream, or re-transmit any video or audio content. It only contains pointer links (M3U files) generated from publicly available datasets provided by [iptv-org](https://github.com/iptv-org/iptv).
+* **Content Ownership:** All logos, channel names, trademarks, and stream URLs belong exclusively to their respective owners and broadcasters.
+* **No Control Over External Links:** The maintainer of this repository has no affiliation with or control over external stream links, servers, or content availability.
+* **DMCA Notice:** If you are a copyright owner and want a link removed, please contact the third-party server hosting the actual media file or submit a removal request directly to the upstream database maintainers at [iptv-org](https://github.com/iptv-org/iptv).
