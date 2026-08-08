@@ -2,7 +2,7 @@
 set -e
 
 OUTPUT_FILE="playlist.m3u"
-TARGET_IDS='["AlRasheedTV.iq","AlSharqiya.iq","AlSharqiyaNews.iq","DijlahTV.iq","MBC1.ae","MBC1Egypt.eg","MBC4.ae","MBCIraq.iq","MBCMasr.eg","MBCMasr2.eg"]'
+TARGET_IDS='["AlRasheedTV.iq","AlSharqiya.iq","AlSharqiyaNews.iq","DijlahTV.iq","MBC1.ae","MBC1Egypt.eg","MBC4.ae","MBCIraq.iq","MBCMasr.eg","MBCMasr2.eg","KarbalaTV.iq","AlIraqia.iq"]'
 
 echo "#EXTM3U" > "$OUTPUT_FILE"
 
