@@ -12,43 +12,65 @@ https://raw.githubusercontent.com/sadiqAlAboudi/iptv-m3u8-list/main/playlist.m3u
 
 ## How to Add or Remove Channels
 
-All channel metadata, logos, and streams are fetched dynamically from the iptv-org database using update.sh. You do not need to manually edit stream URLs or logo links.
+All channel metadata, logos, and streams are fetched dynamically from the iptv-org database using `update.sh`. You do not need to manually edit stream URLs or logo links.
 
-### Step 1: Open update.sh
+### Step 1: Open `channels.txt`
 
-Find the TARGET_IDS array near the top of the file:
-```Bash
-TARGET_IDS='["AlRasheedTV.iq","AlSharqiya.iq","AlSharqiyaNews.iq","DijlahTV.iq","MBC1.ae","MBC1Egypt.eg","MBC4.ae","MBCIraq.iq","MBCMasr.eg","MBCMasr2.eg"]'
+Locate and open the `channels.txt` file in the root directory of the repository. Channel IDs are listed one per line:
+
+```Plaintext
+AlRasheedTV.iq
+AlSharqiya.iq
+AlSharqiyaNews.iq
+DijlahTV.iq
+MBC1.ae
+MBC1Egypt.eg
+MBC4.ae
+MBCIraq.iq
+MBCMasr.eg
+MBCMasr2.eg
+KarbalaTV.iq
+AlIraqia.iq
 ```
 
-### Step 2: Modify the Channel Array
+### Step 2: Modify `channels.txt`
 
-- To Add a Channel: Find the official channel ID from [iptv-org.github.io](https://iptv-org.github.io/) and add it to the array.
-- To Remove a Channel: Delete the ID from the array.
+- To Add a Channel: Add its official ID on a new line.
+- To Remove a Channel: Delete its line from the file.
 
-Example:
+#### Example:
 
-To add BBC News (BBCNews.uk) and remove MBC4 (MBC4.ae):
+To add BBC News (BBCNews.uk) and remove MBC4 (MBC4.ae), edit `channels.txt` to:
 
-```Bash
-# Updated array:
-TARGET_IDS='["AlRasheedTV.iq","AlSharqiya.iq","AlSharqiyaNews.iq","BBCNews.uk","DijlahTV.iq","MBC1.ae","MBC1Egypt.eg","MBCIraq.iq","MBCMasr.eg","MBCMasr2.eg"]'
+```Plaintext
+AlRasheedTV.iq
+AlSharqiya.iq
+AlSharqiyaNews.iq
+BBCNews.uk
+DijlahTV.iq
+MBC1.ae
+MBC1Egypt.eg
+MBCIraq.iq
+MBCMasr.eg
+MBCMasr2.eg
+KarbalaTV.iq
+AlIraqia.iq
 ```
 
 ### Step 3: Find Channel IDs
 
 Search for any channel ID on the official database:
 
-- Database / Search: [suspicious link removed]
+- Database / Search: [iptv-org](https://github.com/iptv-org/iptv)
 
-- Format: IDs follow the ChannelName.countrycode format (e.g., AlJazeera.qa, CNN.us, SkyNews.uk).
+- Format: IDs follow the `ChannelName.countrycode` format (e.g., AlJazeera.qa, CNN.us, SkyNews.uk).
 
 ### Step 4: Commit Your Changes
 
-Once you push your updated update.sh to GitHub:
+Once you push your updated channels.txt to GitHub:
 
 - GitHub Actions automatically executes the update script.
-- playlist.m3u regenerates with updated stream URLs, logos, and quality tags within seconds.
+- `playlist.m3u` regenerates with updated stream URLs, logos, and quality tags within seconds.
 
 ---
 

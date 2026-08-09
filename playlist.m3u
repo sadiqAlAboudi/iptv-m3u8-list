@@ -1,8 +1,12 @@
 #EXTM3U
+#EXTINF:-1 tvg-id="AlIraqia.iq@FHD" tvg-logo="https://i.imgur.com/8qQouTW.jpg" group-title="General",Al Iraqia
+https://imn-live.esite-lab.com/hls/iraqia-general.m3u8
 #EXTINF:-1 tvg-id="AlRasheedTV.iq@FHD" tvg-logo="https://i.imgur.com/ltyRjPK.png" group-title="General",Al Rasheed TV
 https://media1.livaat.com/static/AL-RASHEED-HD/playlist.m3u8
 #EXTINF:-1 tvg-id="AlSharqiya.iq@FHD" tvg-logo="https://i.imgur.com/mJIG5IV.png" group-title="General",Al Sharqiya
 http://185.9.2.18/chid_144/index.m3u8
+#EXTINF:-1 tvg-id="AlSharqiya.iq@FHD" tvg-logo="https://i.imgur.com/mJIG5IV.png" group-title="General",Al Sharqiya
+https://5d94523502c2d.streamlock.net/home/mystream/playlist.m3u8
 #EXTINF:-1 tvg-id="AlSharqiyaNews.iq@FHD" tvg-logo="https://i.imgur.com/PeAcXB9.png" group-title="News",Al Sharqiya News
 https://5d94523502c2d.streamlock.net/alsharqiyalive/mystream/playlist.m3u8
 #EXTINF:-1 tvg-id="DijlahTV.iq@FHD" tvg-logo="https://i.imgur.com/kyzH3G5.png" group-title="News",Dijlah TV
