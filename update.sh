@@ -39,23 +39,18 @@ jq -r \
        elif ($q | contains("720")) then "@HD"
        else "@SD" end) as $quality_tag
        
-    # 3. Clean capitalization without string addition traps
+    # 3. Clean capitalization
     | ($chan.categories[0] // "general") as $cat
     | ($cat | .[0:1] | ascii_upcase) as $first
     | ($cat | .[1:]) as $rest
     
     | {
         key: $stream.channel,
-        tvg_id: ($stream.channel + $quality_tag),
-        logo: $logo,
-        group: "\($first)\($rest)",
-        name: ($chan.name // $stream.channel),
-        url: $stream.url
+        entry: "#EXTINF:-1 tvg-id=\"\($stream.channel)\($quality_tag)\" tvg-logo=\"\($logo)\" group-title=\"\($first)\($rest)\",\($chan.name // $stream.channel)\n\($stream.url)"
       }
-    | "#EXTINF:-1 tvg-id=\"\(.tvg_id)\" tvg-logo=\"\(.logo)\" group-title=\"\(.group)\",\(.name)\n\(.url)"
   ]
-  | unique
-  | .[]
+  | unique_by(.key)
+  | .[].entry
 ' <(curl -sL "https://iptv-org.github.io/api/streams.json") >> "$OUTPUT_FILE"
 
 echo "Updated $OUTPUT_FILE successfully."
